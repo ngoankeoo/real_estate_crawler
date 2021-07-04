@@ -8,6 +8,7 @@ from selenium.webdriver.chrome.options import Options
 import sys
 # Declare constant file csv
 RESULT_FILE = 'result.csv'
+TMP_FILE = 'temp2.csv'
 LINK_FILE = 'links.csv'
 
 
@@ -25,13 +26,20 @@ def write_csv(data):
         cw.writeheader()
         cw.writerows(data)
 
+def create_csv():
+    fields = ['price', 'area', 'location', 'title', 'image', 'content', 'up_time', 'contact_name', 'contact_phone']
+    with open(TMP_FILE, 'w', encoding="utf-8-sig") as write_file:
+        cw = csv.DictWriter(write_file, fields, delimiter=',')
+        cw.writeheader()
+
 def crawler():
     links = get_urls()
     all_items = []
 
     if sys.platform.startswith('win'):
         executable_path = "driver/chromedriver.exe"
-        with open('temp.csv', 'a', encoding='utf-8-sig') as temp_file:
+        create_csv()
+        with open(TMP_FILE, 'a', encoding='utf-8-sig') as temp_file:
             for link in links:
                 chrome_options = Options()
                 chrome_options.add_argument("--incognito")
